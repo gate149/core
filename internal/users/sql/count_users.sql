@@ -1,0 +1,2 @@
+SELECT COUNT(*)
+from users
