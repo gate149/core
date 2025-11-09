@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"fmt"
-	"log"
 	"log/slog"
 	"net/http"
 	"os"
@@ -51,8 +50,6 @@ func main() {
 			panic(fmt.Sprintf("error reading config: %s", err.Error()))
 		}
 	}
-
-	log.Printf("✅ Config loaded: TYPESENSE_URL=%s", cfg.TypesenseURL)
 
 	// Create slog logger
 	var logger *slog.Logger

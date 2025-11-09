@@ -5,7 +5,7 @@ import (
 	"io"
 	"unicode/utf8"
 
-	testerv1 "github.com/gate149/contracts/core/v1"
+	corev1 "github.com/gate149/contracts/core/v1"
 	"github.com/gate149/core/internal/models"
 	"github.com/gate149/core/internal/permissions"
 	"github.com/gate149/core/pkg"
@@ -117,7 +117,7 @@ func checkPermission(f func() (bool, error)) error {
 	return nil
 }
 
-func validateCreateContestParams(params testerv1.CreateContestParams) error {
+func validateCreateContestParams(params corev1.CreateContestParams) error {
 	if params.Title == "" {
 		return pkg.Wrap(pkg.ErrBadInput, nil, "", "empty title")
 	}
@@ -130,7 +130,7 @@ func validateCreateContestParams(params testerv1.CreateContestParams) error {
 	return nil
 }
 
-func (h *ContestsHandlers) CreateContest(c *fiber.Ctx, params testerv1.CreateContestParams) error {
+func (h *ContestsHandlers) CreateContest(c *fiber.Ctx, params corev1.CreateContestParams) error {
 	const op = "ContestsHandlers.CreateContest"
 
 	user, err := h.getUser(c)
@@ -164,7 +164,7 @@ func (h *ContestsHandlers) CreateContest(c *fiber.Ctx, params testerv1.CreateCon
 		return pkg.Wrap(pkg.ErrInternal, err, op, "failed to create owner permission")
 	}
 
-	return c.JSON(&testerv1.CreationResponse{Id: contestID})
+	return c.JSON(&corev1.CreationResponse{Id: contestID})
 }
 
 func (h *ContestsHandlers) GetContest(c *fiber.Ctx, id uuid.UUID) error {
@@ -196,7 +196,7 @@ func (h *ContestsHandlers) GetContest(c *fiber.Ctx, id uuid.UUID) error {
 	return c.JSON(GetContestResponseDTO(contest, ps))
 }
 
-func validateUpdateContestRequest(params testerv1.UpdateContestRequest) error {
+func validateUpdateContestRequest(params corev1.UpdateContestRequest) error {
 	if params.Title != nil {
 		titleLength := utf8.RuneCountInString(*params.Title)
 		if titleLength < 3 || titleLength > 64 {
@@ -211,7 +211,7 @@ func (h *ContestsHandlers) UpdateContest(c *fiber.Ctx, id uuid.UUID) error {
 	const op = "ContestsHandlers.UpdateContest"
 	ctx := c.Context()
 
-	var req testerv1.UpdateContestRequest
+	var req corev1.UpdateContestRequest
 	err := c.BodyParser(&req)
 	if err != nil {
 		return pkg.Wrap(pkg.ErrBadInput, err, op, "failed to parse request body")
@@ -270,7 +270,7 @@ func (h *ContestsHandlers) DeleteContest(c *fiber.Ctx, id uuid.UUID) error {
 	return c.SendStatus(fiber.StatusOK)
 }
 
-func validateListContestsParams(params testerv1.ListContestsParams) error {
+func validateListContestsParams(params corev1.ListContestsParams) error {
 	if params.Page < 1 {
 		return pkg.Wrap(pkg.ErrBadInput, nil, "", "page must be greater than 0")
 	}
@@ -292,7 +292,7 @@ func validateListContestsParams(params testerv1.ListContestsParams) error {
 	return nil
 }
 
-func (h *ContestsHandlers) ListContests(c *fiber.Ctx, params testerv1.ListContestsParams) error {
+func (h *ContestsHandlers) ListContests(c *fiber.Ctx, params corev1.ListContestsParams) error {
 	const op = "ContestsHandlers.ListContests"
 	ctx := c.Context()
 
@@ -334,7 +334,7 @@ func (h *ContestsHandlers) ListContests(c *fiber.Ctx, params testerv1.ListContes
 	return c.JSON(ListContestsResponseDTO(contestsList))
 }
 
-func (h *ContestsHandlers) CreateContestProblem(c *fiber.Ctx, contestId uuid.UUID, params testerv1.CreateContestProblemParams) error {
+func (h *ContestsHandlers) CreateContestProblem(c *fiber.Ctx, contestId uuid.UUID, params corev1.CreateContestProblemParams) error {
 	const op = "ContestsHandlers.CreateContestProblem"
 	ctx := c.Context()
 
@@ -413,7 +413,7 @@ func (h *ContestsHandlers) DeleteContestProblem(c *fiber.Ctx, contestId uuid.UUI
 	return c.SendStatus(fiber.StatusOK)
 }
 
-func (h *ContestsHandlers) CreateParticipant(c *fiber.Ctx, contestId uuid.UUID, params testerv1.CreateParticipantParams) error {
+func (h *ContestsHandlers) CreateParticipant(c *fiber.Ctx, contestId uuid.UUID, params corev1.CreateParticipantParams) error {
 	const op = "ContestsHandlers.CreateParticipant"
 	ctx := c.Context()
 
@@ -437,7 +437,7 @@ func (h *ContestsHandlers) CreateParticipant(c *fiber.Ctx, contestId uuid.UUID, 
 	return c.SendStatus(fiber.StatusOK)
 }
 
-func (h *ContestsHandlers) DeleteParticipant(c *fiber.Ctx, contestId uuid.UUID, params testerv1.DeleteParticipantParams) error {
+func (h *ContestsHandlers) DeleteParticipant(c *fiber.Ctx, contestId uuid.UUID, params corev1.DeleteParticipantParams) error {
 	const op = "ContestsHandlers.DeleteParticipant"
 	ctx := c.Context()
 
@@ -461,7 +461,7 @@ func (h *ContestsHandlers) DeleteParticipant(c *fiber.Ctx, contestId uuid.UUID, 
 	return c.SendStatus(fiber.StatusOK)
 }
 
-func (h *ContestsHandlers) ListParticipants(c *fiber.Ctx, contestId uuid.UUID, params testerv1.ListParticipantsParams) error {
+func (h *ContestsHandlers) ListParticipants(c *fiber.Ctx, contestId uuid.UUID, params corev1.ListParticipantsParams) error {
 	const op = "ContestsHandlers.ListParticipants"
 	ctx := c.Context()
 
@@ -491,8 +491,8 @@ func (h *ContestsHandlers) ListParticipants(c *fiber.Ctx, contestId uuid.UUID, p
 		return err
 	}
 
-	resp := testerv1.ListUsersResponse{
-		Users:      make([]testerv1.User, len(participantsList.Users)),
+	resp := corev1.ListUsersResponse{
+		Users:      make([]corev1.User, len(participantsList.Users)),
 		Pagination: PaginationDTO(participantsList.Pagination),
 	}
 
@@ -531,10 +531,10 @@ func (h *ContestsHandlers) GetMonitor(c *fiber.Ctx, contestId uuid.UUID) error {
 	return c.JSON(GetMonitorResponseDTO(monitor))
 }
 
-func GetContestResponseDTO(contest *models.Contest, problems []*models.ContestProblemsListItem) *testerv1.GetContestResponse {
-	resp := testerv1.GetContestResponse{
+func GetContestResponseDTO(contest *models.Contest, problems []*models.ContestProblemsListItem) *corev1.GetContestResponse {
+	resp := corev1.GetContestResponse{
 		Contest:  ContestDTO(*contest),
-		Problems: make([]testerv1.ContestProblemListItem, len(problems)),
+		Problems: make([]corev1.ContestProblemListItem, len(problems)),
 	}
 
 	for i, task := range problems {
@@ -544,9 +544,9 @@ func GetContestResponseDTO(contest *models.Contest, problems []*models.ContestPr
 	return &resp
 }
 
-func ListContestsResponseDTO(contestsList *models.ContestsList) *testerv1.ListContestsResponse {
-	resp := testerv1.ListContestsResponse{
-		Contests:   make([]testerv1.Contest, len(contestsList.Contests)),
+func ListContestsResponseDTO(contestsList *models.ContestsList) *corev1.ListContestsResponse {
+	resp := corev1.ListContestsResponse{
+		Contests:   make([]corev1.Contest, len(contestsList.Contests)),
 		Pagination: PaginationDTO(contestsList.Pagination),
 	}
 
@@ -557,9 +557,9 @@ func ListContestsResponseDTO(contestsList *models.ContestsList) *testerv1.ListCo
 	return &resp
 }
 
-func GetContestProblemResponseDTO(p *models.ContestProblem) *testerv1.GetContestProblemResponse {
-	resp := testerv1.GetContestProblemResponse{
-		Problem: testerv1.ContestProblem{
+func GetContestProblemResponseDTO(p *models.ContestProblem) *corev1.GetContestProblemResponse {
+	resp := corev1.GetContestProblemResponse{
+		Problem: corev1.ContestProblem{
 			ProblemId:   p.ProblemId,
 			Title:       p.Title,
 			MemoryLimit: p.MemoryLimit,
@@ -584,24 +584,26 @@ func GetContestProblemResponseDTO(p *models.ContestProblem) *testerv1.GetContest
 	return &resp
 }
 
-func PaginationDTO(p models.Pagination) testerv1.Pagination {
-	return testerv1.Pagination{
+func PaginationDTO(p models.Pagination) corev1.Pagination {
+	return corev1.Pagination{
 		Page:  p.Page,
 		Total: p.Total,
 	}
 }
 
-func ContestDTO(c models.Contest) testerv1.Contest {
-	return testerv1.Contest{
-		Id:        c.Id,
-		Title:     c.Title,
-		CreatedAt: c.CreatedAt,
-		UpdatedAt: c.UpdatedAt,
+func ContestDTO(c models.Contest) corev1.Contest {
+	return corev1.Contest{
+		Id:             c.Id,
+		Title:          c.Title,
+		IsPrivate:      c.IsPrivate,
+		MonitorEnabled: c.MonitorEnabled,
+		CreatedAt:      c.CreatedAt,
+		UpdatedAt:      c.UpdatedAt,
 	}
 }
 
-func ContestProblemsListItemDTO(t models.ContestProblemsListItem) testerv1.ContestProblemListItem {
-	return testerv1.ContestProblemListItem{
+func ContestProblemsListItemDTO(t models.ContestProblemsListItem) corev1.ContestProblemListItem {
+	return corev1.ContestProblemListItem{
 		ProblemId:   t.ProblemId,
 		Position:    t.Position,
 		Title:       t.Title,
@@ -612,8 +614,8 @@ func ContestProblemsListItemDTO(t models.ContestProblemsListItem) testerv1.Conte
 	}
 }
 
-func UserDTO(u models.User) testerv1.User {
-	return testerv1.User{
+func UserDTO(u models.User) corev1.User {
+	return corev1.User{
 		Id:        u.Id,
 		Username:  u.Username,
 		Role:      u.Role,
@@ -622,14 +624,14 @@ func UserDTO(u models.User) testerv1.User {
 	}
 }
 
-func GetMonitorResponseDTO(m *models.Monitor) testerv1.GetMonitorResponse {
-	resp := testerv1.GetMonitorResponse{
-		Participants: make([]testerv1.ParticipantsStat, len(m.Participants)),
-		Summary:      make([]testerv1.ProblemStatSummary, len(m.Summary)),
+func GetMonitorResponseDTO(m *models.Monitor) corev1.GetMonitorResponse {
+	resp := corev1.GetMonitorResponse{
+		Participants: make([]corev1.ParticipantsStat, len(m.Participants)),
+		Summary:      make([]corev1.ProblemStatSummary, len(m.Summary)),
 	}
 
-	ProblemAttemptsDTO := func(p *models.ProblemAttempts) testerv1.ProblemAttempts {
-		return testerv1.ProblemAttempts{
+	ProblemAttemptsDTO := func(p *models.ProblemAttempts) corev1.ProblemAttempts {
+		return corev1.ProblemAttempts{
 			ProblemId:      p.ProblemId,
 			Position:       p.Position,
 			State:          stateP(p.State),
@@ -637,13 +639,13 @@ func GetMonitorResponseDTO(m *models.Monitor) testerv1.GetMonitorResponse {
 		}
 	}
 
-	ParticipantsStatDTO := func(p models.ParticipantsStat) testerv1.ParticipantsStat {
-		s := testerv1.ParticipantsStat{
+	ParticipantsStatDTO := func(p models.ParticipantsStat) corev1.ParticipantsStat {
+		s := corev1.ParticipantsStat{
 			// UserId:   p.UserId,
 			Username: p.Username,
 			Solved:   p.Solved,
 			Penalty:  p.Penalty,
-			Attempts: make([]testerv1.ProblemAttempts, len(p.Attempts)),
+			Attempts: make([]corev1.ProblemAttempts, len(p.Attempts)),
 		}
 
 		for i, attempt := range p.Attempts {
@@ -653,8 +655,8 @@ func GetMonitorResponseDTO(m *models.Monitor) testerv1.GetMonitorResponse {
 		return s
 	}
 
-	ProblemStatSummaryDTO := func(p models.ProblemStatSummary) testerv1.ProblemStatSummary {
-		return testerv1.ProblemStatSummary{
+	ProblemStatSummaryDTO := func(p models.ProblemStatSummary) corev1.ProblemStatSummary {
+		return corev1.ProblemStatSummary{
 			ProblemId: p.ProblemId,
 			Position:  p.Position,
 			SAttempts: p.SAttempts,

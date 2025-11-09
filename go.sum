@@ -69,6 +69,12 @@ github.com/dustin/go-humanize v1.0.1 h1:GzkhY7T5VNhEkwH0PVJgjz+fX1rhBrR7pRT3mDkp
 github.com/dustin/go-humanize v1.0.1/go.mod h1:Mu1zIs6XwVuF/gI1OepvI0qD18qycQx+mFykh5fBlto=
 github.com/gate149/contracts v0.0.0-20251108231033-8e8765019477 h1:cg/ffx626XQG+mcYdvP9S9va6uL51CH/fEMGla6vNWM=
 github.com/gate149/contracts v0.0.0-20251108231033-8e8765019477/go.mod h1:tNNvBeDhLMBNvzCp5dyZTTjePL6E+66YQU0L+REBfmo=
+github.com/gate149/contracts v0.0.0-20251109175551-d7a32e41015a h1:j5L7wheqdP3vk+QGH2lIHR/TY2Y7keXuscA2PrYrr50=
+github.com/gate149/contracts v0.0.0-20251109175551-d7a32e41015a/go.mod h1:tNNvBeDhLMBNvzCp5dyZTTjePL6E+66YQU0L+REBfmo=
+github.com/gate149/contracts v0.0.0-20251109175817-cacc1ea9fc53 h1:yVNdXgDuxkh4BbqajMt4XvkQfjympSAZ/PdNTUx/CKM=
+github.com/gate149/contracts v0.0.0-20251109175817-cacc1ea9fc53/go.mod h1:tNNvBeDhLMBNvzCp5dyZTTjePL6E+66YQU0L+REBfmo=
+github.com/gate149/contracts v0.0.0-20251109180110-a577082c4de2 h1:Cz+A6PIBFDCCiiZudCNRmZh595URR/HCRcJA7L0b1dg=
+github.com/gate149/contracts v0.0.0-20251109180110-a577082c4de2/go.mod h1:tNNvBeDhLMBNvzCp5dyZTTjePL6E+66YQU0L+REBfmo=
 github.com/go-sql-driver/mysql v1.8.1/go.mod h1:wEBSXgmK//2ZFJyE+qWnIsVGmvmEKlqwuVSjsCm7DZg=
 github.com/go-sql-driver/mysql v1.9.3 h1:U/N249h2WzJ3Ukj8SowVFjdtZKfu9vlLZxjPXV1aweo=
 github.com/go-sql-driver/mysql v1.9.3/go.mod h1:qn46aNg1333BRMNU69Lq93t8du/dwxI64Gl8i5p1WMU=
