@@ -301,11 +301,6 @@ func (h *ContestsHandlers) ListContests(c *fiber.Ctx, params testerv1.ListContes
 		return err
 	}
 
-	user, err := h.getUser(c)
-	if err != nil {
-		return err
-	}
-
 	filter := models.ContestsFilter{
 		Page:     int64(params.Page),
 		PageSize: int64(params.PageSize),
@@ -318,6 +313,11 @@ func (h *ContestsHandlers) ListContests(c *fiber.Ctx, params testerv1.ListContes
 
 	// Add owner filter if provided (for user's private contests)
 	if params.Owner != nil {
+		// For owner filter, we need authenticated user
+		user, err := h.getUser(c)
+		if err != nil {
+			return err
+		}
 		filter.OwnerId = &user.Id
 	}
 

@@ -152,16 +152,8 @@ func main() {
 		return c.Next()
 	})
 
-	// Add logging middleware for all requests
-	server.Use(func(c *fiber.Ctx) error {
-		logger.Info("Incoming request",
-			slog.String("method", c.Method()),
-			slog.String("path", c.Path()),
-			slog.String("url", c.OriginalURL()),
-			slog.String("content_type", c.Get("Content-Type")),
-		)
-		return c.Next()
-	})
+	// Add request logging middleware with timing and context
+	server.Use(middleware.RequestLoggerMiddleware(logger))
 
 	type MergedHandlers struct {
 		*users.UsersHandlers

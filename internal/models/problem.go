@@ -71,8 +71,6 @@ type Problem struct {
 	NotesHtml        string `db:"notes_html"`
 	ScoringHtml      string `db:"scoring_html"`
 
-	OwnerId *uuid.UUID `db:"owner_id"` // Problem creator/owner
-
 	Meta    Meta    `db:"meta"`    // JSONB field
 	Samples Samples `db:"samples"` // JSONB field
 

@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
-	"path/filepath"
 	"time"
 
 	"github.com/gate149/core/internal/models"
@@ -104,13 +103,9 @@ func (uc *UseCase) performTesting(ctx context.Context, solutionId uuid.UUID, cre
 
 	defer os.Remove(archivePath)
 
-	testsPath, err := uc.problemsUC.UnarchiveTestsArchive(ctx, archivePath, solutionId.String())
+	_, err = uc.problemsUC.UnarchiveTestsArchive(ctx, archivePath, solutionId.String())
 	if err != nil {
 		return
-	}
-
-	for _, name := range problem.Meta.Names {
-		fmt.Println(filepath.Join(testsPath, name))
 	}
 
 	return

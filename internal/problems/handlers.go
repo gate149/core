@@ -2,7 +2,6 @@ package problems
 
 import (
 	"context"
-	"fmt"
 	"io"
 	"log/slog"
 
@@ -88,12 +87,6 @@ func (h *ProblemsHandlers) ListProblems(c *fiber.Ctx, params testerv1.ListProble
 	const op = "ProblemsHandlers.ListProblems"
 	ctx := c.Context()
 
-	// Get user database ID
-	userID, err := h.getUserID(c)
-	if err != nil {
-		return err
-	}
-
 	// Build filter
 	filter := models.ProblemsFilter{
 		Page:     params.Page,
@@ -105,6 +98,11 @@ func (h *ProblemsHandlers) ListProblems(c *fiber.Ctx, params testerv1.ListProble
 
 	// Add owner filter if provided (for user's private problems)
 	if params.Owner != nil && *params.Owner == "me" {
+		// For owner filter, we need authenticated user
+		userID, err := h.getUserID(c)
+		if err != nil {
+			return err
+		}
 		filter.OwnerId = &userID
 	}
 
@@ -148,8 +146,8 @@ func (h *ProblemsHandlers) CreateProblem(c *fiber.Ctx, params testerv1.CreatePro
 	// Set user as owner of the problem
 	err = h.permissionsUC.CreatePermission(ctx, permissions.ResourceProblem, problemID, userID, permissions.RelationOwner)
 	if err != nil {
-		// Log error but continue - this is a permission setup step, not critical for creation
-		fmt.Printf("Warning: failed to create owner relation: %v\n", err)
+		// Note: This is a permission setup step, not critical for creation
+		// The error is logged by the CreatePermission method internally
 	}
 
 	return c.JSON(&testerv1.CreationResponse{Id: problemID})
@@ -225,13 +223,6 @@ func (h *ProblemsHandlers) UpdateProblem(c *fiber.Ctx, id uuid.UUID) error {
 		}
 	}
 
-	// Log at the very start
-	if logger != nil {
-		logger.Info("UpdateProblem handler called", slog.String("problem_id", id.String()))
-	} else {
-		fmt.Printf("UpdateProblem handler called for problem_id: %s\n", id.String())
-	}
-
 	// Get user database ID
 	userID, err := h.getUserID(c)
 	if err != nil {
@@ -258,26 +249,8 @@ func (h *ProblemsHandlers) UpdateProblem(c *fiber.Ctx, id uuid.UUID) error {
 
 	var req testerv1.UpdateProblemRequest
 
-	// Log raw request before parsing
-	fmt.Printf("🔍 UpdateProblem raw request:\n")
-	fmt.Printf("   Content-Type: %s\n", c.Get("Content-Type"))
-	fmt.Printf("   Body length: %d\n", len(c.Body()))
-	fmt.Printf("   Body: %s\n", string(c.Body()))
-
 	err = c.BodyParser(&req)
 	if err != nil {
-		// Log the raw body for debugging
-		body := c.Body()
-		if logger != nil {
-			logger.Error("failed to parse update problem request body",
-				slog.String("op", op),
-				slog.String("raw_body", string(body)),
-				slog.String("content_type", c.Get("Content-Type")),
-				slog.Any("error", err),
-			)
-		} else {
-			fmt.Printf("Failed to parse body: %v\nRaw body: %s\nContent-Type: %s\n", err, string(body), c.Get("Content-Type"))
-		}
 		return pkg.Wrap(pkg.ErrBadInput, err, op, "failed to parse request body")
 	}
 

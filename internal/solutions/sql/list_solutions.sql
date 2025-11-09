@@ -33,11 +33,11 @@ WHERE (
         OR s.problem_id = $3
     )
     AND (
-        $4::text IS NULL
+        $4::integer IS NULL
         OR s.language = $4
     )
     AND (
-        $5::text IS NULL
+        $5::integer IS NULL
         OR s.state = $5
     )
 ORDER BY CASE
